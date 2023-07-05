@@ -5,6 +5,8 @@ import { IUpgradeableProxied } from "./interfaces/IUpgradeableProxied.sol";
 
 contract UpgradeableProxied is IUpgradeableProxied {
 
+    // Placeholder for implementation address, bytes32 so implementation address can never
+    // be set by the implementation contract.
     bytes32 private slot0;
 
     mapping (address => uint256) public override wards;
