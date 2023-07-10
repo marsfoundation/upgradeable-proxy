@@ -5,6 +5,8 @@ import { UpgradeableProxied } from "../src/UpgradeableProxied.sol";
 
 contract CounterImplementation is UpgradeableProxied {
 
+    event SetNumber(uint256 newNumber);
+
     uint256 public number;
 
     mapping(bytes32 => uint256) public numberMapping;
@@ -16,6 +18,7 @@ contract CounterImplementation is UpgradeableProxied {
 
     function setNumber(uint256 newNumber) public {
         number = newNumber;
+        emit SetNumber(newNumber);  // Test events are emitted correctly from proxy
     }
 
     function setNumberMapping(bytes32 key, uint256 newNumber) public auth {

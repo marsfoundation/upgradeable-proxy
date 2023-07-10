@@ -9,7 +9,10 @@ import { CounterImplementation } from "./CounterImplementation.sol";
 
 contract ProxyBaseTest is Test {
 
+    event Deny(address indexed usr);
     event Rely(address indexed usr);
+    event SetImplementation(address indexed implementation_);
+    event SetNumber(uint256 newNumber);
 
     CounterImplementation public implementation;
     UpgradeableProxy      public proxy;
@@ -44,11 +47,15 @@ contract ProxyDenyTest is ProxyBaseTest {
     }
 
     function test_deny_success() public {
-        assertEq(proxy.wards(address(this)), 1);
+        address existingAdmin = address(this);
 
-        proxy.deny(address(this));
+        assertEq(proxy.wards(existingAdmin), 1);
 
-        assertEq(proxy.wards(address(this)), 0);
+        vm.expectEmit(true, true, true, true, address(proxy));
+        emit Deny(existingAdmin);
+        proxy.deny(existingAdmin);
+
+        assertEq(proxy.wards(existingAdmin), 0);
     }
 
 }
@@ -65,9 +72,11 @@ contract ProxyRelyTest is ProxyBaseTest {
         proxy.rely(newAdmin);
     }
 
-    function test_rely_sucess() public {
+    function test_rely_success() public {
         assertEq(proxy.wards(newAdmin), 0);
 
+        vm.expectEmit(true, true, true, true, address(proxy));
+        emit Rely(newAdmin);
         proxy.rely(newAdmin);
 
         assertEq(proxy.wards(newAdmin), 1);
@@ -91,6 +100,8 @@ contract ProxySetImplementationTest is ProxyBaseTest {
     function test_setImplementation_success() public {
         assertEq(proxy.implementation(), address(0));
 
+        vm.expectEmit(true, true, true, true, address(proxy));
+        emit SetImplementation(newImplementation);
         proxy.setImplementation(newImplementation);
 
         assertEq(proxy.implementation(), newImplementation);
@@ -131,6 +142,8 @@ contract ProxyFallbackTest is ProxyBaseTest {
         assertEq(counterProxy.number(),   0);
         assertEq(implementation.number(), 0);
 
+        vm.expectEmit(true, true, true, true, address(counterProxy));
+        emit SetNumber(42);
         counterProxy.setNumber(42);
 
         assertEq(counterProxy.number(),   42);
