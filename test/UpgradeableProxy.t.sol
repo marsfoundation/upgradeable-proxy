@@ -20,7 +20,7 @@ contract ProxyBaseTest is Test {
     function setUp() public virtual {
         implementation = new CounterImplementation();
 
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit();
         emit Rely(address(this));
         proxy = new UpgradeableProxy();
     }
@@ -51,7 +51,7 @@ contract ProxyDenyTest is ProxyBaseTest {
 
         assertEq(proxy.wards(existingAdmin), 1);
 
-        vm.expectEmit(true, true, true, true, address(proxy));
+        vm.expectEmit(address(proxy));
         emit Deny(existingAdmin);
         proxy.deny(existingAdmin);
 
@@ -75,7 +75,7 @@ contract ProxyRelyTest is ProxyBaseTest {
     function test_rely_success() public {
         assertEq(proxy.wards(newAdmin), 0);
 
-        vm.expectEmit(true, true, true, true, address(proxy));
+        vm.expectEmit(address(proxy));
         emit Rely(newAdmin);
         proxy.rely(newAdmin);
 
@@ -100,7 +100,7 @@ contract ProxySetImplementationTest is ProxyBaseTest {
     function test_setImplementation_success() public {
         assertEq(proxy.implementation(), address(0));
 
-        vm.expectEmit(true, true, true, true, address(proxy));
+        vm.expectEmit(address(proxy));
         emit SetImplementation(newImplementation);
         proxy.setImplementation(newImplementation);
 
@@ -142,7 +142,7 @@ contract ProxyFallbackTest is ProxyBaseTest {
         assertEq(counterProxy.number(),   0);
         assertEq(implementation.number(), 0);
 
-        vm.expectEmit(true, true, true, true, address(counterProxy));
+        vm.expectEmit(address(counterProxy));
         emit SetNumber(42);
         counterProxy.setNumber(42);
 
