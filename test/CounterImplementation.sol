@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.13;
+// SPDX-License-Identifier: AGPL-3.0-or-later
+pragma solidity ^0.8.0;
 
 import { UpgradeableProxied } from "../src/UpgradeableProxied.sol";
 
@@ -10,7 +10,7 @@ contract CounterImplementation is UpgradeableProxied {
     mapping(bytes32 => uint256) public numberMapping;
 
     modifier auth {
-        require(wards[msg.sender] == 1, "CounterImplementation/not-authed");
+        require(wards[msg.sender] == 1, "CounterImplementation/not-authorized");
         _;
     }
 

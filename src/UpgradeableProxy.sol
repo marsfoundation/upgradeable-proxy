@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.13;
+// SPDX-License-Identifier: AGPL-3.0-or-later
+pragma solidity ^0.8.0;
 
 import { IUpgradeableProxy } from "./interfaces/IUpgradeableProxy.sol";
 
@@ -10,7 +10,7 @@ contract UpgradeableProxy is IUpgradeableProxy {
     mapping (address => uint256) public override wards;
 
     modifier auth {
-        require(wards[msg.sender] == 1, "UpgradeableProxy/not-authed");
+        require(wards[msg.sender] == 1, "UpgradeableProxy/not-authorized");
         _;
     }
 

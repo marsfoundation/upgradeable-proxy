@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.13;
+// SPDX-License-Identifier: AGPL-3.0-or-later
+pragma solidity ^0.8.0;
 
-import { Test} from "forge-std/Test.sol";
+import { Test } from "forge-std/Test.sol";
 
 import { UpgradeableProxy } from "../src/UpgradeableProxy.sol";
 
@@ -9,12 +9,16 @@ import { CounterImplementation } from "./CounterImplementation.sol";
 
 contract ProxyBaseTest is Test {
 
+    event Rely(address indexed usr);
+
     CounterImplementation public implementation;
     UpgradeableProxy      public proxy;
 
     function setUp() public virtual {
         implementation = new CounterImplementation();
 
+        vm.expectEmit(true, true, true, true);
+        emit Rely(address(this));
         proxy = new UpgradeableProxy();
     }
 
@@ -35,11 +39,11 @@ contract ProxyDenyTest is ProxyBaseTest {
         address nonAdmin = makeAddr("non-admin");
 
         vm.prank(nonAdmin);
-        vm.expectRevert("UpgradeableProxy/not-authed");
+        vm.expectRevert("UpgradeableProxy/not-authorized");
         proxy.deny(address(this));
     }
 
-    function test_deny_sucess() public {
+    function test_deny_success() public {
         assertEq(proxy.wards(address(this)), 1);
 
         proxy.deny(address(this));
@@ -57,7 +61,7 @@ contract ProxyRelyTest is ProxyBaseTest {
         address nonAdmin = makeAddr("non-admin");
 
         vm.prank(nonAdmin);
-        vm.expectRevert("UpgradeableProxy/not-authed");
+        vm.expectRevert("UpgradeableProxy/not-authorized");
         proxy.rely(newAdmin);
     }
 
@@ -79,7 +83,7 @@ contract ProxySetImplementationTest is ProxyBaseTest {
         address nonAdmin = makeAddr("non-admin");
 
         vm.prank(nonAdmin);
-        vm.expectRevert("UpgradeableProxy/not-authed");
+        vm.expectRevert("UpgradeableProxy/not-authorized");
         proxy.setImplementation(newImplementation);
     }
 
@@ -139,7 +143,7 @@ contract ProxyFallbackTest is ProxyBaseTest {
         bytes32 key = "key";
 
         vm.prank(makeAddr("non-admin"));
-        vm.expectRevert("CounterImplementation/not-authed");
+        vm.expectRevert("CounterImplementation/not-authorized");
         counterProxy.setNumberMapping(key, 42);
     }
 
@@ -165,7 +169,7 @@ contract ProxyFallbackTest is ProxyBaseTest {
         assertEq(counterProxy.wards(address(this)),   1);
         assertEq(implementation.wards(address(this)), 0);
 
-        vm.expectRevert("CounterImplementation/not-authed");
+        vm.expectRevert("CounterImplementation/not-authorized");
         implementation.setNumberMapping(key, 42);
 
         counterProxy.setNumberMapping(key, 42);
