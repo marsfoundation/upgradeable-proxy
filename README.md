@@ -11,9 +11,12 @@
 
 The `upgradeable-proxy` repo consists of two contracts:
 ### `UpgradeableProxy.sol`
-A non-transparent proxy contract with minimal logic to allow for administrative permissioning and upgradeability. `rely`/`deny` are used to permission the proxy to call the implementation contract. `setImplementation` is used to upgrade the implementation contract.
+- A non-transparent proxy contract with minimal logic to allow for administrative permissioning and upgradeability.
+- `rely`/`deny` are used to permission the proxy to call the implementation contract.
+- `setImplementation` is used to upgrade the implementation contract.
 ### `UpgradeableProxied.sol`
-`UpgradeableProxied` is a contract designed to be inherited by **ANY AND ALL** implementations that are using `UpgradeableProxy.sol` as their proxy contract. This contract contains the same storage layout with the implementation address slot taken up by a dummy `bytes32` `slot0` variable to prevent malicious implementations from overwriting the implementation address slot.
+- `UpgradeableProxied` is a contract designed to be inherited by **ANY AND ALL** implementations that are using `UpgradeableProxy.sol` as their proxy contract.
+- This contract contains the same storage layout with the implementation address slot taken up by a dummy `bytes32` `slot0` variable to prevent malicious implementations from overwriting the implementation address slot.
 
 
 ## Testing
