@@ -23,6 +23,5 @@ The `upgradeable-proxy` repo consists of two contracts:
 To run the tests, do the following:
 
 ```
-forge install
 forge test
 ```
