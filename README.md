@@ -16,15 +16,13 @@ The `upgradeable-proxy` repo consists of two contracts:
 - `setImplementation` is used to upgrade the implementation contract.
 ### `UpgradeableProxied.sol`
 - `UpgradeableProxied` is a contract designed to be inherited by **ANY AND ALL** implementations that are using `UpgradeableProxy.sol` as their proxy contract.
-- This contract contains the same storage layout with the implementation address slot taken up by a dummy `bytes32` `slot0` variable to prevent malicious implementations from overwriting the implementation address slot.
-
+- This contract contains the same storage layout with the implementation address slot taken up by a dummy `bytes32` `slot0` variable to prevent unintended overwriting of the implementation address slot.
 
 ## Testing
 
 To run the tests, do the following:
 
 ```
-gcl git@github.com:marsfoundation/upgradeable-proxy.git
-cd upgradeable-proxy
+forge install
 forge test
 ```
