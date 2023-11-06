@@ -34,7 +34,7 @@ contract UpgradeableProxy is IUpgradeableProxy {
         emit SetImplementation(implementation_);
     }
 
-    fallback() external payable {
+    fallback() external {
         address implementation_ = implementation;
 
         require(implementation_.code.length != 0, "UpgradeableProxy/no-code-at-implementation");
@@ -55,7 +55,5 @@ contract UpgradeableProxy is IUpgradeableProxy {
             }
         }
     }
-
-    receive() external payable {}
 
 }
